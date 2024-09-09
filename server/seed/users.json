@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "email": "admin@gmail.com",
+    "username": "admin",
+    "firstName": "Doe",
+    "lastName": "Jane",
+    "password": "12345678",
+    "resetPasswordToken": "",
+    "profileImage": "http://localhost:8084/public/user-image/default-man.png",
+    "userType": "Admin",
+    "priority": 1
+  },
+  {
+    "id": 2,
+    "email": "johndoe@gmail.com",
+    "username": "johndoe",
+    "firstName": "Doe",
+    "lastName": "John",
+    "password": "12345678",
+    "resetPasswordToken": "",
+    "profileImage": "http://localhost:8084/public/user-image/default-man.png",
+    "userType": "Customer",
+    "priority": 2
+  },
+  {
+    "id": 3,
+    "email": "ricks@gmail.com",
+    "username": "ricks",
+    "firstName": "Riks",
+    "lastName": "Kanh",
+    "password": "12345678",
+    "resetPasswordToken": "",
+    "profileImage": "http://localhost:8084/public/user-image/default-man.png",
+    "userType": "Customer",
+    "priority": 2
+  },
+  {
+    "id": 4,
+    "email": "gabriel@gmail.com",
+    "username": "gabriel",
+    "firstName": "Gabriel",
+    "lastName": "Simon",
+    "password": "12345678",
+    "resetPasswordToken": "",
+    "profileImage": "http://localhost:8084/public/user-image/default-man.png",
+    "userType": "Customer",
+    "priority": 2
+  },
+  {
+    "id": 5,
+    "email": "nix@gmail.com",
+    "username": "nix",
+    "firstName": "Oups",
+    "lastName": "Nix",
+    "password": "12345678",
+    "resetPasswordToken": "",
+    "profileImage": "http://localhost:8084/public/user-image/default-man.png",
+    "userType": "Customer",
+    "priority": 2
+  }
+]
