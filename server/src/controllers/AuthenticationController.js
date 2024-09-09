@@ -21,7 +21,7 @@ module.exports = {
         req.body.priority = 2;
       }
       req.body.profileImage =
-        "http://localhost:8084/public/user-image/default-man.png";
+        "http://192.168.206.160:8084/public/user-image/default-man.png";
       const user = await User.create(req.body);
 
       return res.send({ id: user.id });

@@ -46,7 +46,7 @@ export default {
   components: {},
   data() {
     return {
-     companyLogo: "http://localhost:8084/public/logo.png",
+     companyLogo: "http://192.168.206.160:8084/public/logo.png",
      
     };
   },
