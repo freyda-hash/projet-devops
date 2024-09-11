@@ -1,66 +1,59 @@
-#!/bin/bash
+##!/bin/bash
 
-# Variables
-APP_DIR="/var/www/phone-shop"
-DB_NAME= $DB_NAME
-DB_USER= $DB_USER
-DB_PASS= $DB_PASS
+# Script to set up the test environment for phone-shop application
 
-# Mise à jour du système
-echo "Mise à jour des paquets..."
-sudo apt update && sudo apt upgrade -y
+echo "Starting environment setup..."
 
-# Installation des outils nécessaires
-echo "Installation de Nginx, MySQL, et Node.js..."
-sudo apt install -y nginx mysql-server mysql-client nodejs npm
-
-# Configuration de MySQL
-echo "Configuration de la base de données MySQL..."
-sudo mysql -e "CREATE DATABASE $DB_NAME;"
-sudo mysql -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-sudo mysql -e "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';"
-sudo mysql -e "FLUSH PRIVILEGES;"
-
-# Clonage de l'application (assurez-vous que Git est installé ou ajoutez une étape d'installation de Git)
-echo "Clonage de l'application depuis le dépôt..."
-git clone https://github.com/your-repository/phone-shop.git $APP_DIR
-
-# Installation des dépendances de l'application
-echo "Installation des dépendances de l'application..."
-cd $APP_DIR
+# Navigate to server directory and install server dependencies
+echo "Installing server dependencies..."
+cd server
 npm install
+if [ $? -ne 0 ]; then
+  echo "Failed to install server dependencies."
+  exit 1
+fi
 
-# Configuration de Nginx
-echo "Configuration de Nginx..."
-cat <<EOL | sudo tee /etc/nginx/sites-available/myapp
-server {
-    listen 80;
-    server_name localhost;
+# Navigate to client directory and install client dependencies
+echo "Installing client dependencies..."
+cd ../client
+npm install
+if [ $? -ne 0 ]; then
+  echo "Failed to install client dependencies."
+  exit 1
+fi
 
-    root $APP_DIR/public;
-    index index.html index.htm;
+# Go back to server directory to configure MySQL
+cd ../server
 
-    location / {
-        try_files \$uri \$uri/ =404;
-    }
+# Check if .env file exists, if not, prompt user to create it
+if [ ! -f .env ]; then
+  echo ".env file not found! Please create a .env file with your database configuration."
+  exit 1
+fi
 
-    location /api {
-        proxy_pass http://localhost:3000;
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
-    }
-}
-EOL
+# Feed some initial data to the database
+echo "Seeding the database with initial data..."
+npm run seed
+if [ $? -ne 0 ]; then
+  echo "Failed to seed the database."
+  exit 1
+fi
 
-# Activer la configuration de Nginx
-sudo ln -s /etc/nginx/sites-available/myapp /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl reload nginx
+# Start the backend server
+echo "Starting the backend server..."
+npm start &
+if [ $? -ne 0 ]; then
+  echo "Failed to start the backend server."
+  exit 1
+fi
 
-# Lancer l'application (ajustez selon le script de démarrage de votre application)
-echo "Lancement de l'application..."
-nohup npm start > /var/log/phone-shop.log 2>&1 &
+# Start the Vue application in another terminal
+echo "Starting the Vue application..."
+cd ../client
+npm run serve &
+if [ $? -ne 0 ]; then
+  echo "Failed to start the Vue application."
+  exit 1
+fi
 
-echo "Configuration terminée. L'application devrait être disponible sur http://localhost"
+echo "Environment setup complete. Your application should be running locally on port 8080."
